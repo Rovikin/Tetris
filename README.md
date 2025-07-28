@@ -20,3 +20,13 @@ cd Tetris
 g++ tetris.cpp -o tetris -lncurses
 ./tetris
 ```
+## Panduan
+gunakan kursor keyboard anda.
+
+↑  = rotasi
+
+→ = kanan
+
+← = kiri
+
+↓  = percepat kebawah
