@@ -5,195 +5,172 @@
 #include <string>
 #include <chrono>
 #include <thread>
+#include <array>
+#include <optional>
 
-using namespace std;
+using Matrix = std::vector<std::vector<int>>;
+constexpr int W = 10, H = 20;
 
-const int W = 10, H = 20;
+const std::array<Matrix, 7> shapes = {{
+    {{1,1,1},{0,1,0}},       // T
+    {{1,1},{1,1}},           // O
+    {{1,1,0},{0,1,1}},       // Z
+    {{0,1,1},{1,1,0}},       // S
+    {{1,0,0},{1,1,1}},       // J
+    {{0,0,1},{1,1,1}},       // L
+    {{1,1,1,1}}              // I
+}};
 
-vector<vector<vector<int>>> shapes = {
-    {{1,1,1},{0,1,0}},          // T
-    {{1,1},{1,1}},              // O
-    {{1,1,0},{0,1,1}},          // Z
-    {{0,1,1},{1,1,0}},          // S
-    {{1,0,0},{1,1,1}},          // J
-    {{0,0,1},{1,1,1}},          // L
-    {{1,1,1,1}}                 // I
-};
-
-typedef vector<vector<int>> Matrix;
-
-vector<vector<int>> new_board() {
-    return vector<vector<int>>(H, vector<int>(W, 0));
+Matrix new_board() {
+    return Matrix(H, std::vector<int>(W, 0));
 }
 
 Matrix rotate(const Matrix& shape) {
-    int rows = shape.size(), cols = shape[0].size();
-    Matrix rotated(cols, vector<int>(rows));
-    for (int y = 0; y < rows; y++)
-        for (int x = 0; x < cols; x++)
-            rotated[x][rows - y - 1] = shape[y][x];
-    return rotated;
+    int r = shape.size(), c = shape[0].size();
+    Matrix out(c, std::vector<int>(r));
+    for(int y=0; y<r; ++y)
+        for(int x=0; x<c; ++x)
+            out[x][r - 1 - y] = shape[y][x];
+    return out;
 }
 
-bool check_collision(const vector<vector<int>>& board, const Matrix& shape, int ox, int oy) {
-    for (int y = 0; y < shape.size(); y++) {
-        for (int x = 0; x < shape[y].size(); x++) {
+bool collision(const Matrix& board, const Matrix& shape, int ox, int oy) {
+    for(int y=0; y<shape.size(); ++y)
+        for(int x=0; x<shape[y].size(); ++x)
             if (shape[y][x]) {
-                int nx = ox + x, ny = oy + y;
-                if (nx < 0 || nx >= W || ny < 0 || ny >= H || board[ny][nx])
+                int nx = ox+x, ny = oy+y;
+                if (nx<0 || nx>=W || ny<0 || ny>=H || board[ny][nx])
                     return true;
             }
-        }
-    }
     return false;
 }
 
-void merge(vector<vector<int>>& board, const Matrix& shape, int ox, int oy) {
-    for (int y = 0; y < shape.size(); y++)
-        for (int x = 0; x < shape[y].size(); x++)
-            if (shape[y][x]) board[oy + y][ox + x] = 1;
+void merge(Matrix& board, const Matrix& shape, int ox, int oy) {
+    for(int y=0; y<shape.size(); ++y)
+        for(int x=0; x<shape[y].size(); ++x)
+            if (shape[y][x])
+                board[oy+y][ox+x] = 1;
 }
 
-void clear_lines(vector<vector<int>>& board, int& score) {
-    vector<vector<int>> new_board;
-    int lines = 0;
-    for (auto& row : board) {
-        bool full = true;
-        for (int cell : row)
-            if (cell == 0) full = false;
-        if (!full) new_board.push_back(row);
-        else lines++;
+int clear_lines(Matrix& board) {
+    int cleared = 0;
+    Matrix nb;
+    for(auto& row : board) {
+        if (std::all_of(row.begin(), row.end(), [](int v){return v;}))
+            ++cleared;
+        else
+            nb.push_back(row);
     }
-    while (new_board.size() < H)
-        new_board.insert(new_board.begin(), vector<int>(W, 0));
-    board = new_board;
-    score += lines * 100;
+    while (nb.size() < H)
+        nb.insert(nb.begin(), std::vector<int>(W,0));
+    board.swap(nb);
+    return cleared;
 }
 
-void draw_border(int top, int left) {
-    for (int y = 0; y < H; y++) {
-        mvprintw(top + y, left - 1, "|");
-        mvprintw(top + y, left + W * 2, "|");
+void draw_border(int top,int left) {
+    for(int y=0;y<H;++y) {
+        mvprintw(top+y, left-1, "|");
+        mvprintw(top+y, left+W*2, "|");
     }
-    mvprintw(top + H, left - 1, "+");
-    for (int x = 0; x < W * 2; x++) printw("=");
+    mvprintw(top+H, left-1, "+");
+    for(int x=0;x<W*2;++x) printw("=");
     printw("+");
 }
 
-void draw_shape(const Matrix& shape, int ox, int oy, int top, int left) {
-    for (int y = 0; y < shape.size(); y++)
-        for (int x = 0; x < shape[y].size(); x++)
-            if (shape[y][x])
-                mvprintw(top + oy + y, left + (ox + x) * 2, "[]");
+void draw_matrix(const Matrix& m, int ox, int oy, int top, int left) {
+    for(int y=0; y<m.size(); ++y)
+        for(int x=0; x<m[y].size(); ++x)
+            if (m[y][x])
+                mvprintw(top+oy+y, left+(ox+x)*2, "[]");
 }
 
-void draw_board(const vector<vector<int>>& board, const Matrix& shape, int ox, int oy,
-                const Matrix& next_shape, int score, int level, bool paused) {
+void draw(const Matrix& board, const Matrix& shape, int ox, int oy,
+          const Matrix& next_shape, int score, int level, bool paused) {
     clear();
     int top = 2, left = 4;
+    draw_matrix(board, 0, 0, top, left);
+    draw_matrix(shape, ox, oy, top, left);
+    draw_border(top,left);
 
-    for (int y = 0; y < H; y++)
-        for (int x = 0; x < W; x++)
-            if (board[y][x])
-                mvprintw(top + y, left + x * 2, "[]");
-
-    draw_shape(shape, ox, oy, top, left);
-    draw_border(top, left);
-
-    mvprintw(2, left + W * 2 + 4, "Next:");
-    for (int y = 0; y < next_shape.size(); y++)
-        for (int x = 0; x < next_shape[y].size(); x++)
-            if (next_shape[y][x])
-                mvprintw(3 + y, left + W * 2 + 4 + x * 2, "[]");
-
-    mvprintw(9,  left + W * 2 + 4, "Score: %d", score);
-    mvprintw(10, left + W * 2 + 4, "Level: %d", level);
-    mvprintw(12, left + W * 2 + 4, "'P' = Pause");
-
-    if (paused)
-        mvprintw(H / 2, left + 2, "-- PAUSED --");
-
+    mvprintw(2, left+W*2+4, "Next:");
+    draw_matrix(next_shape, 0, 0, 3, left+W*2+4);
+    mvprintw(9, left+W*2+4, "Score: %d", score);
+    mvprintw(10, left+W*2+4, "Level: %d", level);
+    mvprintw(12, left+W*2+4, "'P' = Pause");
+    if(paused)
+        mvprintw(top+H/2, left+W/2-3, "-- PAUSED --");
     refresh();
 }
 
-int hard_drop(const vector<vector<int>>& board, const Matrix& shape, int ox, int oy) {
-    while (!check_collision(board, shape, ox, oy + 1))
-        oy++;
+int hard_drop(const Matrix& board, const Matrix& shape, int ox, int oy) {
+    while (!collision(board, shape, ox, oy+1)) ++oy;
     return oy;
 }
 
-int main() {
-    initscr();
-    noecho();
-    cbreak();
-    keypad(stdscr, TRUE);
-    nodelay(stdscr, TRUE);
-    curs_set(0);
+int main(){
+    initscr(); noecho(); cbreak(); keypad(stdscr, TRUE);
+    nodelay(stdscr, TRUE); curs_set(0);
+    std::srand(std::time(nullptr));
 
-    srand(time(0));
-    auto board = new_board();
-    auto shape = shapes[rand() % shapes.size()];
-    auto next_shape = shapes[rand() % shapes.size()];
-    int ox = W / 2 - shape[0].size() / 2, oy = 0;
-    int score = 0, level = 0;
-    double speed = 1.0;  // Lambat di awal
-    bool paused = false;
-    auto last_fall = chrono::steady_clock::now();
+    Matrix board = new_board();
+    Matrix shape = shapes[std::rand()%shapes.size()];
+    Matrix next_shape = shapes[std::rand()%shapes.size()];
+    int ox = W/2 - shape[0].size()/2, oy = 0;
+    int score=0, level=0;
+    double speed=1.0;
+    bool paused=false;
+    auto last = std::chrono::steady_clock::now();
 
-    while (true) {
-        draw_board(board, shape, ox, oy, next_shape, score, level, paused);
-
+    while(true){
+        draw(board, shape, ox, oy, next_shape, score, level, paused);
         int ch = getch();
-        if (ch == 'q') break;
-        else if (ch == 'p' || ch == 'P') {
+        if(ch=='q'||ch=='Q') break;
+        if(ch=='p'||ch=='P'){
             paused = !paused;
-            this_thread::sleep_for(chrono::milliseconds(200));
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
         }
-
-        if (paused) {
-            this_thread::sleep_for(chrono::milliseconds(50));
+        if(paused){
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
             continue;
         }
 
-        if (ch == KEY_LEFT && !check_collision(board, shape, ox - 1, oy)) ox--;
-        else if (ch == KEY_RIGHT && !check_collision(board, shape, ox + 1, oy)) ox++;
-        else if (ch == KEY_DOWN || ch == ' ') oy = hard_drop(board, shape, ox, oy);
-        else if (ch == KEY_UP) {
-            auto rotated = rotate(shape);
-            if (!check_collision(board, rotated, ox, oy))
-                shape = rotated;
+        if(ch==KEY_LEFT && !collision(board, shape, ox-1, oy)) --ox;
+        else if(ch==KEY_RIGHT && !collision(board, shape, ox+1, oy)) ++ox;
+        else if(ch==KEY_DOWN || ch==' ') oy = hard_drop(board, shape, ox, oy);
+        else if(ch==KEY_UP){
+            auto r = rotate(shape);
+            if(!collision(board, r, ox, oy)) shape = std::move(r);
         }
 
-        auto now = chrono::steady_clock::now();
-        if (chrono::duration<double>(now - last_fall).count() > speed) {
-            if (!check_collision(board, shape, ox, oy + 1)) {
-                oy++;
-            } else {
+        auto now = std::chrono::steady_clock::now();
+        if (std::chrono::duration<double>(now - last).count() > speed) {
+            if(!collision(board, shape, ox, oy+1)) ++oy;
+            else {
                 merge(board, shape, ox, oy);
-                clear_lines(board, score);
+                int lines = clear_lines(board);
+                score += lines * 100;
                 shape = next_shape;
-                next_shape = shapes[rand() % shapes.size()];
-                ox = W / 2 - shape[0].size() / 2;
-                oy = 0;
-                if (check_collision(board, shape, ox, oy)) {
-                    mvprintw(H / 2, 4, " GAME OVER ");
+                next_shape = shapes[std::rand()%shapes.size()];
+                ox = W/2 - shape[0].size()/2; oy = 0;
+                if(collision(board, shape, ox, oy)) {
+                    mvprintw(H/2, 4, " GAME OVER ");
                     refresh();
-                    this_thread::sleep_for(chrono::seconds(2));
+                    std::this_thread::sleep_for(std::chrono::seconds(2));
                     break;
                 }
             }
-            last_fall = now;
+            last = now;
         }
 
-        int new_level = score / 2000;
-        if (new_level > level) {
+        int new_level = score / 1000;
+        if(new_level > level){
             level = new_level;
-            speed = max(0.2, speed - 0.1);
+            speed = std::max(0.1, speed * 0.9);
         }
-
-        this_thread::sleep_for(chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     endwin();
     return 0;
 }
+
