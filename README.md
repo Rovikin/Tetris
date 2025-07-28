@@ -1,5 +1,5 @@
 # Tetris
-Game ringan yang ditulis dalam python dan C++. 
+Game ringan yang ditulis dalam python dan C++. Silahkan pilih salah satu dari keduanya.
 ## Dependensi
 ### Python
 ```
