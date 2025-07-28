@@ -1,7 +1,7 @@
 # 🎮 Tetris
 
 Game ringan berbasis terminal yang ditulis dalam Python dan C++.
-Silakan pilih salah satu versi sesuai kenyamanan lu.
+Silakan pilih salah satu versi sesuai kenyamanan anda.
 
 ---
 
@@ -30,7 +30,7 @@ g++ tetris.cpp -o tetris -lncurses
 
 ## 🎮 Panduan Kontrol
 
-Gunakan kursor keyboard lu:
+Gunakan kursor keyboard anda:
 
 | Tombol | Fungsi            |
 |--------|-------------------|
@@ -41,26 +41,7 @@ Gunakan kursor keyboard lu:
 | P      | Pause / Unpause   |
 | Q      | Keluar dari game  |
 
----
-
-## 📜 Lisensi
-
-Proyek ini menggunakan lisensi **MIT** (opsional, tapi disarankan).  
-Feel free buat pakai, modif, atau kontribusi balik ✨
-
----
-
-## 📂 Struktur File
-
-```
-Tetris/
-├── tetris.py    # Versi Python
-├── tetris.cpp   # Versi C++
-└── README.md    # File ini
-```
-
----
 
 ## 🚀 Credits
 
-Made with ❤️ by [Rovikin](https://github.com/Rovikin)
+Made by [Rovikin](https://github.com/Rovikin)
