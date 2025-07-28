@@ -136,10 +136,9 @@ int main() {
     auto next_shape = shapes[rand() % shapes.size()];
     int ox = W / 2 - shape[0].size() / 2, oy = 0;
     int score = 0, level = 0;
-    double speed = 0.7;
+    double speed = 1.0;  // Lambat di awal
     bool paused = false;
     auto last_fall = chrono::steady_clock::now();
-    auto start_time = chrono::steady_clock::now();
 
     while (true) {
         draw_board(board, shape, ox, oy, next_shape, score, level, paused);
@@ -156,12 +155,9 @@ int main() {
             continue;
         }
 
-        if (ch == KEY_LEFT && !check_collision(board, shape, ox - 1, oy))
-            ox--;
-        else if (ch == KEY_RIGHT && !check_collision(board, shape, ox + 1, oy))
-            ox++;
-        else if (ch == KEY_DOWN || ch == ' ')
-            oy = hard_drop(board, shape, ox, oy);
+        if (ch == KEY_LEFT && !check_collision(board, shape, ox - 1, oy)) ox--;
+        else if (ch == KEY_RIGHT && !check_collision(board, shape, ox + 1, oy)) ox++;
+        else if (ch == KEY_DOWN || ch == ' ') oy = hard_drop(board, shape, ox, oy);
         else if (ch == KEY_UP) {
             auto rotated = rotate(shape);
             if (!check_collision(board, rotated, ox, oy))
@@ -189,11 +185,10 @@ int main() {
             last_fall = now;
         }
 
-        auto elapsed = chrono::duration<double>(now - start_time).count();
-        int new_level = (int)(elapsed / 120);
+        int new_level = score / 2000;
         if (new_level > level) {
             level = new_level;
-            speed = max(0.1, speed - 0.1);
+            speed = max(0.2, speed - 0.1);
         }
 
         this_thread::sleep_for(chrono::milliseconds(10));
