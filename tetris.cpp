@@ -162,10 +162,10 @@ int main(){
             last = now;
         }
 
-        int new_level = score / 1000;
+        int new_level = score / 2000;
         if(new_level > level){
             level = new_level;
-            speed = std::max(0.1, speed * 0.9);
+            speed = std::max(0.05, speed * 0.95); // lebih smooth
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
@@ -173,4 +173,3 @@ int main(){
     endwin();
     return 0;
 }
-
