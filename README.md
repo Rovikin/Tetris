@@ -11,19 +11,19 @@ Silakan pilih salah satu versi sesuai kenyamanan anda.
 ```bash
 pkg update && pkg upgrade -y
 pkg install python git
-git clone https://github.com/Rovikin/Tetris.git
-cd Tetris
-python tetris.py
+git clone https://github.com/Rovikin/blockdrop.git
+cd blockdrop/py/
+python blockdrop.py
 ```
 
 ### 💻 C++
 ```bash
 pkg update && pkg upgrade -y
 pkg install git clang make ncurses
-git clone https://github.com/Rovikin/Tetris.git
-cd Tetris
-g++ tetris.cpp -o tetris -lncurses
-./tetris
+git clone https://github.com/Rovikin/blockdrop.git
+cd blockdrop/cpp/
+g++ blockdrop.cpp -o blockdrop -lncurses
+./blockdrop
 ```
 
 ---

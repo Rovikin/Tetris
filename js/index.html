@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Tetris Mobile</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-container">
+    <div class="game-board">
+      <canvas id="board" width="250" height="500"></canvas>
+      <div class="controls">
+        <div class="button-row">
+          <button class="btn" id="leftBtn">◀️</button>
+          <button class="btn" id="rightBtn">▶️</button>
+          <button class="btn rotate-btn" id="rotateBtn">🔘</button>
+        </div>
+        <div class="button-row action-row">
+          <button class="action-btn" id="pauseBtn">⏹️ Pause</button>
+          <button class="action-btn" id="restartBtn">🔁 Reset</button>
+          <button class="action-btn" id="hardDropBtn">🔽 Drop</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hud-panel">
+      <div class="next-piece">
+        <div class="title">Next</div>
+        <div class="next-box" id="nextBox"></div>
+      </div>
+      <div class="stat">
+        <div class="title">Score</div>
+        <div class="stat-row">
+          <span>Score</span>
+          <span class="stat-value" id="score">0</span>
+        </div>
+        <div class="stat-row">
+          <span>Level</span>
+          <span class="stat-value" id="level">0</span>
+        </div>
+        <div class="stat-row">
+          <span>Lines</span>
+          <span class="stat-value" id="lines">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
