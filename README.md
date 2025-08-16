@@ -1,4 +1,4 @@
-# 🎮 Tetris
+# 🎮 Blockdrop
 
 Game ringan berbasis terminal yang ditulis dalam Python dan C++.
 Silakan pilih salah satu versi sesuai kenyamanan anda.
