@@ -5,7 +5,7 @@ Silakan pilih salah satu versi sesuai kenyamanan anda.
 
 Mainkan Blockdrop langsung di Browser kesayangan anda. Sambil bernostalgia masa kecil anda 😁.
 
-[Blockdrop Play Now](
+[👉👉👉 Blockdrop](
 https://rovikin.github.io/blockdrop/)
 ---
 
