@@ -3,6 +3,10 @@
 Game ringan berbasis terminal yang ditulis dalam Python dan C++.
 Silakan pilih salah satu versi sesuai kenyamanan anda.
 
+Mainkan Blockdrop langsung di Browser kesayangan anda. Sambil bernostalgia masa kecil anda 😁.
+
+[Blockdrop Play Now](
+https://rovikin.github.io/blockdrop/)
 ---
 
 ## 🧪 Instalasi
@@ -24,6 +28,28 @@ git clone https://github.com/Rovikin/blockdrop.git
 cd blockdrop/cpp/
 g++ blockdrop.cpp -o blockdrop -lncurses
 ./blockdrop
+```
+
+### Jalankan Offline
+
+#### python
+
+```
+pkg update && pkg upgrade -y
+pkg install git python
+git clone https://github.com/Rovikin/blockdrop.git
+cd blockdrop
+python -m http.server 8089
+```
+
+#### NodeJS
+
+```
+pkg update && pkg upgrade -y
+pkg install git nodejs
+git clone https://github.com/Rovikin/blockdrop.git
+npm install -g http-server
+http-server
 ```
 
 ---
