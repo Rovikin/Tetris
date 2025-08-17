@@ -25,12 +25,14 @@ Versi Mobile untuk pengguna Smartphone. Dilengkapi dengan tombol virtual:
 
 ![Mobile Version](img/mobile.png)
 
-### Luncurkan Game Versi Mobile:
+***Luncurkan Game Versi Mobile:***
 
 Klik tautan dibawah ini untuk meluncurkan game versi mobile:
 
 [👉👉👉 Blockdrop Mobile Version](
 https://rovikin.github.io/blockdrop/)
+
+---
 
 ## Desktop Version
 
@@ -48,7 +50,7 @@ Versi Desktop untuk pengguna PC / Laptop. Versi ini bisa diakses dan dikontrol h
 
 ![Desktop Version](img/desktop.png)
 
-### Luncurkan Game Versi Desktop:
+***Luncurkan Game Versi Desktop:***
 
 Untuk meluncurkan game versi desktop silahkan klik tautan dibawah ini:
 
