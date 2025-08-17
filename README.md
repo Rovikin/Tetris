@@ -8,7 +8,7 @@ Mainkan Blockdrop langsung di Browser kesayangan anda. Sambil bernostalgia masa 
 [👉👉👉 Blockdrop Mobile Version](
 https://rovikin.github.io/blockdrop/)
 
-[👉👉👉 [Blockdrop Desktop Version]()
+[👉👉👉 Blockdrop Desktop Version]()
 
 ---
 
