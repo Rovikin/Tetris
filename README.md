@@ -32,8 +32,6 @@ Klik tautan dibawah ini untuk meluncurkan game versi mobile:
 [👉👉👉 Blockdrop Mobile Version](
 https://rovikin.github.io/blockdrop/)
 
----
-
 ## Desktop Version
 
 Versi Desktop untuk pengguna PC / Laptop. Versi ini bisa diakses dan dikontrol hanya menggunakan keyboard fisik atau D-pad pada stick game (jika ada).
@@ -61,8 +59,6 @@ Untuk meluncurkan game versi desktop silahkan klik tautan dibawah ini:
 ## 🧪 Instalasi
 
 Instalasi ini hanya menampilkan panduan penginstalan versi CLI
-
----
 
 ### ▶️ Python
 ```bash
@@ -102,7 +98,6 @@ Gunakan kursor keyboard anda:
 
 Game ini bisa anda jalankan secara lokal. Silahkan ikuti panduan dibawah ini. Anda bisa modifikasi sesuka anda untuk mendapatkan pengalaman terbaik.
 
----
 ### Mobile Version
 
 #### python (Mobile)
@@ -125,8 +120,6 @@ cd blockdrop-desktop
 python -m http.server 8089
 ```
 
----
-
 #### NodeJS (Mobile)
 
 ```
@@ -148,11 +141,5 @@ cd blockdrop-desktop l
 npm install -g http-server
 http-server
 ```
-
----
-
-## 🚀 Credits
-
-Made by [Rovikin](https://github.com/Rovikin)
 
 ---
