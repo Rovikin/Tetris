@@ -1,6 +1,9 @@
 # 🎮 Blockdrop
 
 Game ringan berbasis terminal yang ditulis dalam Python dan C++.
+
+Tersedia juga versi web siap jalan.
+
 Silakan pilih salah satu versi sesuai kenyamanan anda.
 
 Mainkan Blockdrop langsung di Browser kesayangan anda. Sambil bernostalgia masa kecil anda 😁.
